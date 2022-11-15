@@ -86,7 +86,7 @@ Route::prefix('/')->group(function () {
     });
 
     Route::group(['controller' =>  ContactController::class, 'prefix' => 'contact', 'as' => 'contact.'], function () {
-        // Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index');
         Route::get('/', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
     });
@@ -137,6 +137,13 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{categoryModel}', 'edit')->name('edit');
             Route::put('/update/{categoryModel}', 'update')->name('update');
             Route::delete('/destroy/{categoryModel}', 'destroy')->name('delete');
+        });
+
+        Route::group(['controller' =>  ContactController::class, 'prefix' => 'contact', 'as' => 'contact.'], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/edit/{contactModel}', 'edit')->name('edit');
+            Route::put('/update/{contactModel}', 'update')->name('update');
+            Route::delete('/destroy/{contactModel}', 'destroy')->name('delete');
         });
 
         Route::group(['controller' => CouponController::class, 'prefix' => 'coupon', 'as' => 'coupon.'], function () {

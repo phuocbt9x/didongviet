@@ -62,6 +62,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('contact.index') }}"
+                            class="nav-link  {{ ($title == 'Contact')  ? 'active' : ''}}">
+                            <i class="nav-icon fas fa-file-contract"></i>
+                            <p>Contact</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('coupon.index') }}"
                             class="nav-link  {{ ($title == 'Coupon')  ? 'active' : ''}}">
                             <i class="nav-icon fas fa-ticket-alt"></i>

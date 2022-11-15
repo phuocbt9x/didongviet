@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FeedbackMail;
 use App\Models\ContactModel;
 use Illuminate\Http\Request;
+use Mail;
+use Yajra\DataTables\DataTables;
 
 class ContactController extends Controller
 {
@@ -12,8 +15,30 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $contacts = ContactModel::all();
+            return Datatables::of($contacts)
+                ->editColumn('activated', function ($contact) {
+                    if ($contact->activated == 1) {
+                        return "<span class='badge badge-success'>Actived</span>";
+                    }
+                    return "<span class='badge badge-danger'>Not Actived</span>";
+                })
+                ->addColumn('action', function ($contact) {
+                    $routeEdit = route('contact.edit', $contact->id);
+                    $routeDelete = route('contact.delete', $contact->id);
+                    $deleteAjax = "deleteAjax('$routeDelete')";
+                    $buttonEdit = '<button class="btn btn-sm btn-success" onclick="window.location.href=\'' . "$routeEdit'\">" . '<i class="fas fa-pen-alt"></i>' . '</button>';
+                    $buttonDelete = '<button class="btn btn-sm btn-danger btn-delete" onclick="' . "$deleteAjax\">" . ' <i class="fas fa-trash"></i>' . '</button>';
+                    $element = '<div class="d-flex justify-content-around" >' . $buttonEdit . $buttonDelete . '</div>';
+                    return $element;
+                })
+                ->rawColumns(['activated', 'action'])
+                ->make(true);
+        }
+        return view('admin.contact.index');
     }
 
     /**
@@ -67,7 +92,7 @@ class ContactController extends Controller
      */
     public function edit(ContactModel $contactModel)
     {
-        //
+        return view('admin.contact.update', compact('contactModel'));
     }
 
     /**
@@ -79,7 +104,19 @@ class ContactController extends Controller
      */
     public function update(Request $request, ContactModel $contactModel)
     {
-        //
+        if ($request->filled('feedback')) {
+            $request = $request->merge(['activated' => 1]);
+            $data['name'] = $contactModel->name;
+            $data['title'] = $contactModel->title;
+            $data['content'] = $contactModel->content;
+            $data['feedback'] = $request->feedback;
+            Mail::to($contactModel->email)->send(new FeedbackMail($data));
+        }
+        $request = $request->except('feedback');
+        if ($contactModel->update($request)) {
+            return redirect()->route('contact.index')
+                ->withErrors(['message' => 'Cập nhật thành công!']);
+        }
     }
 
     /**

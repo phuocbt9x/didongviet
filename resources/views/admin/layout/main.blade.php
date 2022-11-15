@@ -71,6 +71,11 @@
     <script src="{{ asset('assets/custom') }}/ajax.js"></script>
     @stack('script_table')
     @stack('script')
+    @error('message')
+    <script>
+        toastMessage('{{ $message }}');
+    </script>
+    @enderror
 </body>
 
 </html>
