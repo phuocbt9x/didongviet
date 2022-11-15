@@ -48,11 +48,6 @@ class ShopController extends Controller
         return view('customer.checkout');
     }
 
-    public function contact()
-    {
-        return view('customer.contact');
-    }
-
     public function detail(ProductModel $productModel)
     {
         $arrtribute = $productModel->attributeProducts->pluck('attribute_id');

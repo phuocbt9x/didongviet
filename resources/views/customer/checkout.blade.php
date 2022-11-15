@@ -31,22 +31,41 @@
                         <div class="row">
                             <div class="col-lg-12 mb-20">
                                 <label>Full Name <span>*</span></label>
-                                <input type="text" name="member" value="{{ $user->name ?? '' }}">
+                                <input type="text" name="member" value="{{ Auth::user()->name ?? '' }}">
+                                @error('member')
+                                <div class="alert alert-danger" style="padding: 0px 20px; margin: 10px 0 0 0;">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-lg-6 mb-20">
                                 <label>Phone<span>*</span></label>
-                                <input type="text" value="{{ $user->phone ?? '' }}" name="phone">
-
+                                <input type="text" value="{{ Auth::user()->phone ?? '' }}" name="phone">
+                                @error('phone')
+                                <div class="alert alert-danger" style="padding: 0px 20px; margin: 10px 0 0 0;">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-lg-6 mb-20">
                                 <label> Email Address <span>*</span></label>
-                                <input type="text" value="{{ $user->email ?? '' }}" name="email">
+                                <input type="text" value="{{ Auth::user()->email ?? '' }}" name="email">
+                                @error('email')
+                                <div class="alert alert-danger" style="padding: 0px 20px; margin: 10px 0 0 0;">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-12 mb-20">
                                 <label for="city_id">Country <span>*</span></label>
                                 <select class="form-control" name="city_id" id="city_id">
-                                    <option value="2">Chọn Tỉnh/Thành</option>
+                                    <option value="0">Chọn Tỉnh/Thành</option>
                                 </select>
+                                @error('city_id')
+                                <div class="alert alert-danger" style="padding: 0px 20px; margin: 10px 0 0 0;">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
 
                             <div class="col-12 mb-20">
@@ -54,12 +73,22 @@
                                 <select class="form-control" id="district_id" name="district_id">
                                     <option value="">Chọn Quận/Huyện</option>
                                 </select>
+                                @error('district_id')
+                                <div class="alert alert-danger" style="padding: 0px 20px; margin: 10px 0 0 0;">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-12 mb-20">
                                 <label for="ward_id">Ward <span>*</span></label>
                                 <select class="form-control" name="ward_id" id="ward_id">
                                     <option value="">Chọn Xã/Phường</option>
                                 </select>
+                                @error('ward_id')
+                                <div class="alert alert-danger" style="padding: 0px 20px; margin: 10px 0 0 0;">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                             <div class="col-12 mb-20">
                                 <div class="order-notes">
@@ -92,7 +121,12 @@
                                     <tr>
                                         <td>
                                             {{ $item['productInfo']['name'] }}
-                                            <strong> × {{ $item['quantity']}}</strong>
+                                            <br>
+                                            <strong>
+                                                {{ $item['quantity']}} × {{ number_format($item['productInfo']['price'],
+                                                0, '', '.') }}
+                                                ₫
+                                            </strong>
                                         </td>
                                         <td>
                                             {{ number_format($item['price'], 0, '', '.') }} ₫
@@ -114,12 +148,12 @@
                                         <th>Discount</th>
                                         <td>
                                             <strong>
-                                                @switch($cart['coupon']['type'])
+                                                @switch($cart->coupon['type'])
                                                 @case(0)
-                                                -{{ number_format($cart['coupon']['value']) }}%
+                                                -{{ number_format($cart->coupon['value']) }}%
                                                 @break
                                                 @case(1)
-                                                -{{ number_format($cart['coupon']['value'], 0, '', '.') }} ₫
+                                                -{{ number_format($cart->coupon['value'], 0, '', '.') }} ₫
                                                 @break
                                                 @endswitch
                                             </strong>

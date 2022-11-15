@@ -4,9 +4,6 @@ namespace App\Http\Controllers\PaymentController;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderModel;
-use Exception;
-use Illuminate\Http\Request;
-use Symfony\Component\Console\Input\Input;
 
 class VnPayController extends Controller
 {

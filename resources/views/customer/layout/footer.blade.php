@@ -62,4 +62,9 @@
         toastMessageDanger('{{ $message }}');
     </script>
     @enderror
+    @error('message')
+    <script>
+        toastMessage('{{ $message }}');
+    </script>
+    @enderror
 </footer>

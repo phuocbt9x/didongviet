@@ -213,8 +213,8 @@ function getAddress(cityId = -1, districtId = -1, wardId = -1) {
                 $('#city_id').append(`<option ${(value.code == cityId) ? 'selected' : -1} value="${value.code}">${value.name}</option>`);
             });
             if (districtId != -1) {
-                $('#district_id').html('<option>Chọn quận/huyện</option>');
-                $('#ward_id').html('<option> Chọn phường/xã </option>');
+                $('#district_id').html('<option value="">Chọn quận/huyện</option>');
+                $('#ward_id').html('<option value=""> Chọn phường/xã </option>');
                 data.map(value => {
                     if (value.code == cityId) {
                         districts = value.districts;
@@ -225,8 +225,8 @@ function getAddress(cityId = -1, districtId = -1, wardId = -1) {
                 })
             }
             $('#city_id').change(function () {
-                $('#district_id').html('<option>Chọn quận/huyện</option>');
-                $('#ward_id').html('<option> Chọn phường/xã </option>');
+                $('#district_id').html('<option value="">Chọn quận/huyện</option>');
+                $('#ward_id').html('<option value=""> Chọn phường/xã </option>');
                 let idCity = $(this).val();
                 data.map(value => {
                     if (value.code == idCity) {

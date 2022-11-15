@@ -4,7 +4,11 @@ namespace App\Http\Controllers\CustomerController;
 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerModel\MemberModel;
+use App\Models\OrderDetailModel;
+use App\Models\OrderModel;
+use App\Models\ProductOrderModel;
 use App\Rules\Phone;
+use Auth;
 use Illuminate\Http\Request;
 use Image;
 
@@ -17,7 +21,9 @@ class MemberController extends Controller
      */
     public function index()
     {
-        return view('customer.profile');
+        $infoMember = Auth::user();
+        $order = OrderModel::where('member_id', $infoMember->id)->get();
+        return view('customer.profile', compact('infoMember', 'order'));
     }
 
     /**
@@ -63,5 +69,12 @@ class MemberController extends Controller
                 ->back()
                 ->withErrors(['successUpdateMember' => 'Thông tin đã được cập nhật thành công!']);
         }
+    }
+
+    public function order($id)
+    {
+        $order = OrderModel::findOrFail($id);
+        $orderDetail = OrderDetailModel::where('order_id', $order->id)->get();
+        return view('customer.order', compact('order', 'orderDetail'));
     }
 }

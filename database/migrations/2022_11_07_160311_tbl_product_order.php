@@ -20,7 +20,8 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('order_detail_id')
                 ->references('id')
-                ->on('tbl_order_detail');
+                ->on('tbl_order_detail')
+                ->onDelete('CASCADE');
             $table->foreign('product_attribute_id')
                 ->references('id')
                 ->on('tbl_product_attribute');

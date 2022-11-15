@@ -45,7 +45,7 @@
 
                                             </div>
                                             <label>Name</label>
-                                            <input type="text" name="name" value="{{ Auth::user()->name ?? '' }}">
+                                            <input type="text" name="name" value="{{ $infoMember->name ?? '' }}">
                                             @error('name')
                                             <div class="alert alert-danger" style="padding: 0px 20px;">
                                                 {{ $message }}
@@ -53,7 +53,7 @@
                                             @enderror
 
                                             <label>Email</label>
-                                            <input type="text" name="email" value="{{ Auth::user()->email ?? '' }}">
+                                            <input type="text" name="email" value="{{ $infoMember->email ?? '' }}">
                                             @error('email')
                                             <div class="alert alert-danger" style="padding: 0px 20px;">
                                                 {{ $message }}
@@ -61,7 +61,7 @@
                                             @enderror
 
                                             <label>Phone</label>
-                                            <input type="text" name="phone" value="{{ Auth::user()->phone ?? '' }}">
+                                            <input type="text" name="phone" value="{{ $infoMember->phone ?? '' }}">
                                             @error('phone')
                                             <div class="alert alert-danger" style="padding: 0px 20px;">
                                                 {{ $message }}
@@ -73,11 +73,11 @@
 
                                             <label>Birthdate</label>
                                             <input type="date"
-                                                value="{{ (!empty(Auth::user()->birth)) ? date( 'Y-m-d', strtotime(Auth::user()->birth)) : '' }}"
+                                                value="{{ (!empty($infoMember->birth)) ? date( 'Y-m-d', strtotime($infoMember->birth)) : '' }}"
                                                 name="birth">
 
                                             <label>Address</label>
-                                            <input type="text" name="address" value="{{ Auth::user()->address ?? '' }}">
+                                            <input type="text" name="address" value="{{ $infoMember->address ?? '' }}">
 
                                             <div style="display: flex;
                                             flex-direction: row;
@@ -150,10 +150,37 @@
                                             <th>Date</th>
                                             <th>Status</th>
                                             <th>Total</th>
+                                            <th>Pay status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($order->isNotEmpty())
+                                        @foreach ($order as $key=>$item)
+                                        <tr>
+                                            <td>
+                                                {{ $key + 1 }}
+                                            </td>
+                                            <td>
+                                                {{ date('d/m/Y', strtotime($item->created_at)) }}
+                                            </td>
+                                            <td>
+                                                <span class="success">
+                                                    {{ $item->statusOrder() }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{ number_format($item->total_price, 0, '', '.') }} ₫
+                                            </td>
+                                            <td>
+                                                {{ $item->statusPayment() }} ({{ $item->payment }})
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('member.order', $item->id) }}" class="view">view</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        @else
                                         <tr>
                                             <td>1</td>
                                             <td>May 10, 2018</td>
@@ -162,12 +189,13 @@
                                             <td><a href="cart.html" class="view">view</a></td>
                                         </tr>
                                         <tr>
-                                            <td>2</td>
+                                            <td>1</td>
                                             <td>May 10, 2018</td>
-                                            <td>Processing</td>
-                                            <td>$17.00 for 1 item </td>
+                                            <td><span class="success">Completed</span></td>
+                                            <td>$25.00 for 1 item </td>
                                             <td><a href="cart.html" class="view">view</a></td>
                                         </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -182,7 +210,7 @@
 @endsection
 @push('script')
 <script>
-    getAddress({{ Auth::user()->city_id ?? -1 }}, {{ Auth::user()->district_id ?? -1 }}, {{ Auth::user()->ward_id ?? -1 }});
+    getAddress({{ $infoMember->city_id ?? -1 }}, {{ $infoMember->district_id ?? -1 }}, {{ $infoMember->ward_id ?? -1 }});
 
     $('#avatar').change(function(event){
         let image = document.getElementById('avatar_member');

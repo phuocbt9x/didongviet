@@ -223,7 +223,7 @@
                                         </a>
                                     </li>
                                     <li class="{{ ($title=='Contact' ) ? 'active' : '' }}">
-                                        <a href="{{ route('shop.contact') }}">
+                                        <a href="{{ route('contact.create') }}">
                                             <i style="font-size: x-large" class="fa fa-reply mr-1"
                                                 aria-hidden="true"></i>
                                             Liên hệ

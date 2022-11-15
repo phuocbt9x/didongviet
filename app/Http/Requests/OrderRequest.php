@@ -32,4 +32,11 @@ class OrderRequest extends FormRequest
             'ward_id' => 'required'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'required' => 'Trường này không được bỏ trống!'
+        ];
+    }
 }

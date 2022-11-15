@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('order_id')
                 ->references('id')
-                ->on('tbl_order');
+                ->on('tbl_order')->onDelete('CASCADE');
             $table->foreign('product_id')
                 ->references('id')
                 ->on('tbl_product');

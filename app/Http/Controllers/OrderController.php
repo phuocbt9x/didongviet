@@ -9,7 +9,6 @@ use App\Http\Requests\OrderRequest;
 use App\Models\AdminModel\ProductModel;
 use App\Models\OrderDetailModel;
 use App\Models\OrderModel;
-use App\Models\ProductOrder;
 use App\Models\ProductOrderModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +25,9 @@ class OrderController extends Controller
         $cart = collect(session()->get('cart') ?? null)->all();
         $user = Auth::user() ?? null;
         if (empty($cart)) {
-            return redirect()->back()->withErrors(['nullCart' => 'Giỏ hàng của bạn đang trống! Không có sản phẩm nào để thanh toán!']);
+            return redirect()
+                ->back()
+                ->withErrors(['nullCart' => 'Giỏ hàng của bạn đang trống! Không có sản phẩm nào để thanh toán!']);
         }
 
         return view('customer.checkout', compact('cart', 'user'));
@@ -43,6 +44,9 @@ class OrderController extends Controller
         $cart = session()->get('cart') ?? null;
         if (!empty($cart)) {
             $reqValidate = $request->validated();
+            if (Auth::check()) {
+                $reqValidate['member_id'] = Auth::user()->id;
+            }
             $reqValidate['total_price'] = $cart->finalTotalPriceCart;
             $reqValidate['coupon_id'] = $cart->coupon['id'] ?? null;
             $orderModel = new OrderModel();
@@ -85,15 +89,12 @@ class OrderController extends Controller
                     $vnpay = new VnPayController();
                     $result = $vnpay->callApiVnpay($infoOrder);
                     break;
-                case 'zalopay':
-                    $zalopay = new ZaloPayController();
-                    $result = $zalopay->callApiZalo($infoOrder);
-                    break;
                 default:
                     session()->flush('cart');
                     return redirect()->route('thankyou');
                     break;
             }
+
             if (!empty($result)) {
                 session()->flush('cart');
                 return redirect()->away($result);
@@ -134,23 +135,5 @@ class OrderController extends Controller
     public function update(Request $request, OrderModel $orderModel)
     {
         //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\OrderModel  $orderModel
-     * @return \Illuminate\Http\Response
-     */
-    public function checkPayment(Request $request)
-    {
-        // $status = null;
-        // if ($request->get('vnp_TransactionStatus')) {
-        //     $status = 0;
-        // }
-        // if (!empty($request->get('errorCode'))) {
-        //     $status = 0;
-        // }
-        dd($request->get('vnp_TransactionStatus'));
     }
 }

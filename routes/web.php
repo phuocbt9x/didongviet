@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminController\ProductController;
 use App\Http\Controllers\AdminController\RoleController;
 use App\Http\Controllers\AdminController\UserController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CustomerController\LoginController as CustomerControllerLoginController;
 use App\Http\Controllers\CustomerController\MemberController;
 use App\Http\Controllers\CustomerController\ReviewController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController\MomoPayController;
 use App\Http\Controllers\PaymentController\VnPayController;
 use App\Http\Controllers\PaymentController\ZaloPayController;
+use App\Models\ContactModel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,7 +46,6 @@ Route::prefix('/')->group(function () {
         Route::get('/checkout', 'checkout')->name('checkout');
         Route::get('/login', 'login')->name('login');
         Route::get('/register', 'register')->name('register');
-        Route::get('/contact', 'contact')->name('contact');
         Route::get('/detail/{productModel}', 'detail')->name('detail');
         Route::get('/thank-you', 'thankyou')->name('thankyou');
     });
@@ -53,6 +54,7 @@ Route::prefix('/')->group(function () {
         Route::group(['controller' => MemberController::class, 'prefix' => 'member', 'as' => 'member.'], function () {
             Route::get('/profile', 'index')->name('profile');
             Route::post('/profile/update/{memberModel}', 'update')->name('update');
+            Route::get('/order/{id}', 'order')->name('order');
         });
     });
 
@@ -83,6 +85,12 @@ Route::prefix('/')->group(function () {
         Route::get('/checkPayment', 'checkPayment')->name('checkPayment');
     });
 
+    Route::group(['controller' =>  ContactController::class, 'prefix' => 'contact', 'as' => 'contact.'], function () {
+        // Route::get('/', 'index')->name('index');
+        Route::get('/', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+    });
+
     Route::group(['prefix' => 'payment'], function () {
         Route::group(['controller' => VnPayController::class, 'prefix' => 'vnpay', 'as' => 'vnpay.'], function () {
             Route::get('/hookCallBack', 'hookCallBack')->name('hookCallBack');
@@ -96,10 +104,6 @@ Route::prefix('/')->group(function () {
             Route::get('/hookCallBack', 'hookCallBack')->name('hookCallBack');
         });
     });
-
-    Route::get('/thankyou', function () {
-        return view('customer.thankyou');
-    })->name('thankyou');
 });
 
 /**

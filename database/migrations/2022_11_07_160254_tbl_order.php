@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('tbl_order', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('member_id')->nullable();
             $table->string('member');
             $table->string('email');
             $table->string('phone');
@@ -30,6 +31,9 @@ return new class extends Migration
             $table->unsignedInteger('total_price');
             $table->unsignedInteger('coupon_id')->nullable();
             $table->timestamps();
+            $table->foreign('member_id')
+                ->references('id')
+                ->on('tbl_member');
             $table->foreign('admin_id')
                 ->references('id')
                 ->on('tbl_admin');

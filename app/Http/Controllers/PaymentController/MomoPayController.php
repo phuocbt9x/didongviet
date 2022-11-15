@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class MomoPayController extends Controller
 {
-    public function execPostRequest($url, $data)
+    function execPostRequest($url, $data)
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -33,55 +33,51 @@ class MomoPayController extends Controller
 
     public function callApiMomo($infoOrder)
     {
-
-        $endpoint = env('MOMO_ENDPOINT');
+        $endPoint = env('MOMO_ENDPOINT');
         $partnerCode = env('MOMO_PARTNER_CODE');
         $accessKey = env('MOMO_ACCESS_KEY');
-        $serectKey = env('MOMO_SECRET_KEY');
-        $orderId = "$infoOrder->id";
-        $orderInfo = "Thanh toán đơn hàng có mã $orderId";
-        $amount = "$infoOrder->total_price";
-        $bankCode = 'SML';
-        $returnUrl = route('momo.hookCallBack');
-        $requestId = time() . "";
-        $requestType = "captureMoMoWallet";
+        $secretKey = env('MOMO_SECRET_KEY');
+        $orderInfo = "Thanh toán đơn hàng có mã " . $infoOrder->id;
+        $amount = $infoOrder->total_price . "";
+        $orderId = $infoOrder->id . "";
+        $redirectUrl = route('momo.hookCallBack');
+        $ipnUrl = route('momo.hookCallBack');
         $extraData = "";
-        $notifyUrl = route('momo.hookCallBack');
-        $lang = 'vn';
-        // echo $serectkey;die;
-        $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey .
-            "&requestId=" . $requestId . "&amount=" . $amount . "&orderId=" . $orderId .
-            "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl .
-            "&notifyUrl=" . $notifyUrl . "&extraData=" . $extraData;
-        $signature = hash_hmac("sha256", $rawHash, $serectKey);
-
-        $data =  array(
+        $requestId = time() . "";
+        $requestType = "captureWallet";
+        //before sign HMAC SHA256 signature
+        $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount .
+            "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId .
+            "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl .
+            "&requestId=" . $requestId . "&requestType=" . $requestType;
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        $data = array(
             'partnerCode' => $partnerCode,
-            'accessKey' => $accessKey,
+            'partnerName' => "Test",
+            "storeId" => "MomoTestStore",
             'requestId' => $requestId,
             'amount' => $amount,
             'orderId' => $orderId,
             'orderInfo' => $orderInfo,
-            'returnUrl' => $returnUrl,
-            'bankCode' => $bankCode,
+            'redirectUrl' => $redirectUrl,
+            'ipnUrl' => $ipnUrl,
+            'lang' => 'vi',
             'extraData' => $extraData,
             'requestType' => $requestType,
-            'signature' => $signature,
-            'notifyUrl' => $notifyUrl,
-            'lang' => $lang
+            'signature' => $signature
         );
-
-        $result = $this->execPostRequest($endpoint, json_encode($data));
-        $jsonResult = json_decode($result, true); // decode json
+        $result = $this->execPostRequest($endPoint, json_encode($data));
+        $jsonResult = json_decode($result, true);  // decode json
         if (empty($jsonResult['payUrl'])) {
-            return redirect()->back();
+            return redirect()->route('shop.checkout')
+                ->withErrors(['errorMessage' => 'Thanh toán đơn hàng không thành công! Vui lòng thử lại!']);
         }
         return $jsonResult['payUrl'];
     }
 
     public function hookCallBack()
     {
-        if (request('errorCode') == 00) {
+        if (request('resultCode') == 0) {
             $orderId = request('orderId');
             $order = OrderModel::find($orderId);
             if ($order->payment_type == 0) {
@@ -89,9 +85,10 @@ class MomoPayController extends Controller
                     'payment_type' => 1,
                     'payment' => 'MOMO'
                 ]);
-                return redirect()->route('shop.home');
+                return view('customer.thankyou');
             }
         }
+        dd(request('orderId'));
         return redirect()->route('shop.checkout')
             ->withErrors(['errorMessage' => 'Thanh toán đơn hàng không thành công! Vui lòng thử lại!']);
     }

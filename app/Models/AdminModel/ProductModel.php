@@ -84,4 +84,13 @@ class ProductModel extends Model
         }
         return false;
     }
+
+    public function productRelated()
+    {
+        $productRelated = ProductModel::where('category_id', $this->category_id)
+            ->orderBy('id', 'DESC')
+            ->limit(8)
+            ->get();
+        return $productRelated;
+    }
 }
