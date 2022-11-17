@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController\AttributeValueController;
 use App\Http\Controllers\AdminController\BannerController;
 use App\Http\Controllers\AdminController\CategoryController;
 use App\Http\Controllers\AdminController\CouponController;
+use App\Http\Controllers\AdminController\DashboardController;
 use App\Http\Controllers\AdminController\DiscountController;
 use App\Http\Controllers\AdminController\LoginController;
 use App\Http\Controllers\AdminController\ProductController;
@@ -117,9 +118,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/login/logout', 'logout')->name('logout');
     });
     Route::middleware('checkAdminLogin')->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard.index');
+        Route::group(['controller' => DashboardController::class, 'as' => 'dashboard.'], function () {
+            Route::get('/', 'index')->name('index');
+        });
 
         Route::group(['controller' => BannerController::class, 'prefix' => 'banner', 'as' => 'banner.'], function () {
             Route::get('/', 'index')->name('index');
@@ -190,6 +191,14 @@ Route::prefix('admin')->group(function () {
             Route::get('/edit/{productModel}', 'edit')->name('edit');
             Route::put('/update/{productModel}', 'update')->name('update');
             Route::delete('/destroy/{productModel}', 'destroy')->name('delete');
+        });
+
+        Route::group(['controller' =>  OrderController::class, 'prefix' => 'order', 'as' => 'order.'], function () {
+            Route::get('/', 'order')->name('order');
+            Route::get('/show/{orderModel}', 'show')->name('show');
+            Route::get('/edit/{orderModel}', 'edit')->name('edit');
+            Route::put('/update/{orderModel}', 'update')->name('update');
+            Route::delete('/destroy/{orderModel}', 'destroy')->name('delete');
         });
 
         Route::group(['controller' => RoleController::class, 'prefix' => 'role', 'as' => 'role.'], function () {

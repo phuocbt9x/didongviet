@@ -12,9 +12,38 @@ use App\Models\OrderModel;
 use App\Models\ProductOrderModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\DataTables;
 
 class OrderController extends Controller
 {
+    public function order(Request $request)
+    {
+        if ($request->ajax()) {
+            $orders = OrderModel::orderBy('id', 'DESC')->get();
+            return Datatables::of($orders)
+                ->editColumn('id', function ($order) {
+                    return $order->id;
+                })
+                ->editColumn('status', function ($order) {
+                    return $order->statusOrder();
+                })
+                ->editColumn('payment_type', function ($order) {
+                    return $order->statusPayment();
+                })
+                ->addColumn('action', function ($order) {
+                    $routeEdit = route('order.edit', $order->id);
+                    $routeDelete = route('order.delete', $order->id);
+                    $deleteAjax = "deleteAjax('$routeDelete')";
+                    $buttonEdit = '<button class="btn btn-sm btn-success" onclick="window.location.href=\'' . "$routeEdit'\">" . '<i class="fas fa-pen-alt"></i>' . '</button>';
+                    $buttonDelete = '<button class="btn btn-sm btn-danger btn-delete" onclick="' . "$deleteAjax\">" . ' <i class="fas fa-trash"></i>' . '</button>';
+                    $element = '<div class="d-flex justify-content-around" >' . $buttonEdit . $buttonDelete . '</div>';
+                    return $element;
+                })
+                ->rawColumns(['id', 'status', 'payment_type', 'action'])
+                ->make(true);
+        }
+        return view('admin.order.index');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -123,6 +152,7 @@ class OrderController extends Controller
      */
     public function edit(OrderModel $orderModel)
     {
+        return view('admin.order.update', compact('orderModel'));
     }
 
     /**
@@ -134,6 +164,8 @@ class OrderController extends Controller
      */
     public function update(Request $request, OrderModel $orderModel)
     {
-        //
+        if ($orderModel->update($request->all())) {
+            return redirect()->back()->withErrors(['message' => 'Update order thành công']);
+        }
     }
 }

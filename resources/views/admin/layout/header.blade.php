@@ -15,7 +15,7 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="{{ asset('assets/admin') }}/index3.html" class="brand-link">
+        <a href="{{ route('dashboard.index') }}" class="brand-link">
             <img src="{{ asset('assets/admin') }}/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
                 class="brand-image img-circle elevation-3" style="opacity: .8">
             <span class="brand-text font-weight-light">Admin</span>
@@ -26,11 +26,13 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="{{ asset('assets/admin') }}/dist/img/user2-160x160.jpg" class="img-circle elevation-2"
+                    <img src="{{ asset(Auth::guard('admin')->user()->avatar) }}" class="img-circle elevation-2"
                         alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="{{ asset('assets/admin') }}/#" class="d-block">Alexander Pierce</a>
+                    <a href="{{ route('user.show', Auth::guard('admin')->user()->id) }}" class="d-block">
+                        {{ Auth::guard('admin')->user()->name }}
+                    </a>
                 </div>
             </div>
 
@@ -101,6 +103,13 @@
                             class="nav-link  {{ ($title == 'Product')  ? 'active' : ''}}">
                             <i class="nav-icon fas fa-boxes"></i>
                             <p>Product</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('order.order') }}"
+                            class="nav-link  {{ ($title == 'Order')  ? 'active' : ''}}">
+                            <i class="nav-icon fas fa-shopping-cart"></i>
+                            <p>Order</p>
                         </a>
                     </li>
                     <li class="nav-item">

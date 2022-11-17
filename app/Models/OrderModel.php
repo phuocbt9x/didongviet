@@ -14,20 +14,25 @@ class OrderModel extends Model
         'note', 'status', 'payment_type', 'payment', 'admnin_id', 'total_price', 'coupon_id'
     ];
 
+    public function orderDetail()
+    {
+        return $this->hasMany(OrderDetailModel::class, 'order_id', 'id');
+    }
+
     public function statusOrder()
     {
         switch ($this->status) {
             case '1':
-                return 'Đang chuẩn bị hàng!';
+                return 'Đơn hàng đang được chuẩn bị!';
                 break;
             case '2':
-                return 'Đơn hàng đang được giao!';
+                return 'Đơn hàng đã được giao đi!';
                 break;
             case '3':
-                return 'Đơn hàng được giao thành công!';
+                return 'Giao hàng thành công!';
                 break;
-            case '3':
-                return 'Đơn hàng đã được hủy!';
+            case '4':
+                return 'Đơn hàng bị hủy!';
                 break;
             default:
                 return 'Chờ xác nhận đơn hàng!';
