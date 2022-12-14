@@ -120,7 +120,7 @@ class OrderController extends Controller
                     break;
                 default:
                     session()->flush('cart');
-                    return redirect()->route('thankyou');
+                    return view('customer.thankyou');
                     break;
             }
 
