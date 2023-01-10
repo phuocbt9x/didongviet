@@ -12,7 +12,7 @@ class OrderDetailModel extends Model
     use HasFactory;
     public $table = 'tbl_order_detail';
     public $fillable = [
-        'order_id', 'product_id', 'image',
+        'order_id', 'product_id', 'image_product',
         'price', 'quantity', 'total_price'
     ];
 

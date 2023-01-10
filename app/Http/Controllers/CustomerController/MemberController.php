@@ -22,7 +22,7 @@ class MemberController extends Controller
     public function index()
     {
         $infoMember = Auth::user();
-        $order = OrderModel::where('member_id', $infoMember->id)->get();
+        $order = OrderModel::where('member', $infoMember->id)->get();
         return view('customer.profile', compact('infoMember', 'order'));
     }
 

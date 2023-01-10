@@ -74,8 +74,9 @@ class OrderController extends Controller
         if (!empty($cart)) {
             $reqValidate = $request->validated();
             if (Auth::check()) {
-                $reqValidate['member_id'] = Auth::user()->id;
+                $reqValidate['member'] = Auth::user()->id;
             }
+            $reqValidate['code'] = time();
             $reqValidate['total_price'] = $cart->finalTotalPriceCart;
             $reqValidate['coupon_id'] = $cart->coupon['id'] ?? null;
             $orderModel = new OrderModel();
@@ -84,14 +85,16 @@ class OrderController extends Controller
             $cartItem = $cart->itemCart;
             foreach ($cartItem as $key => $item) {
                 $inforProduct = $item['productInfo'];
+
                 $dataItem = [
                     'order_id' => $order->id,
                     'product_id' => $inforProduct['id'],
-                    'image' => $inforProduct['image'],
+                    'image_product' => $inforProduct['image'],
                     'price' => $inforProduct['price'],
                     'quantity' => $item['quantity'],
                     'total_price' => $item['price']
                 ];
+
                 $orderDetailModel = new OrderDetailModel();
                 $orderDetail = $orderDetailModel->create($dataItem);
 

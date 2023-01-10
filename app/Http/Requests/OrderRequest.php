@@ -26,6 +26,7 @@ class OrderRequest extends FormRequest
         return [
             'member' => 'required',
             'phone' => 'required',
+            'address' => '',
             'email' => 'required',
             'city_id' => 'required',
             'district_id' => 'required',

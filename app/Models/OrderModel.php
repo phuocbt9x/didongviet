@@ -10,7 +10,8 @@ class OrderModel extends Model
     use HasFactory;
     public $table = 'tbl_order';
     public $fillable = [
-        'member_id', 'member', 'email', 'phone', 'address', 'city_id', 'district_id', 'ward_id',
+        'code',
+        'member', 'email', 'phone', 'address', 'city_id', 'district_id', 'ward_id',
         'note', 'status', 'payment_type', 'payment', 'admnin_id', 'total_price', 'coupon_id'
     ];
 

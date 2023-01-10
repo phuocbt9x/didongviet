@@ -44,7 +44,7 @@ class DashboardController extends Controller
             }
         );
 
-        $growth = ((int)$thisYear->get(date("m") - 1) - (int)$thisYear->get(date("m") - 2)) / (int)$thisYear->get(date("m") - 2) * 100;
+        // $growth = ((int)$thisYear->get(date("m") - 1) - (int)$thisYear->get(date("m") - 2)) / (int)$thisYear->get(date("m") ? - 2) * 100 ?? 0;
 
         $member = MemberModel::where('activated', 1)->count();
         if ($turnover < 1000000) {
@@ -64,7 +64,7 @@ class DashboardController extends Controller
             'turnover' => $format,
             'lastYear' => $lastYear->implode(','),
             'thisYear' => $thisYear->implode(','),
-            'growth' => round($growth, 3)
+            'growth' => 0
         ]);
     }
 }

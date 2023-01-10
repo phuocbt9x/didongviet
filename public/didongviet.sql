@@ -223,6 +223,34 @@ CREATE TABLE `tbl_coupon`  (
 -- ----------------------------
 -- Records of tbl_coupon
 -- ----------------------------
+DROP TABLE IF EXISTS `tbl_banner`;
+CREATE TABLE `tbl_banner`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0: banner, 1:slide',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `activated` tinyint(1) NOT NULL DEFAULT 0,
+  `time_start` timestamp NOT NULL,
+  `time_end` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tbl_banner
+-- ----------------------------
+INSERT INTO `tbl_banner` VALUES (1, 0, 'Banner 1', NULL, NULL, 'uploads/image/banner/banner-1673277695-banner-1666693363-VCBDesk--1--380x200-1.png', 1, '2023-01-02 00:00:00', '2023-02-11 00:00:00', '2023-01-09 22:21:35', '2023-01-09 22:21:35');
+INSERT INTO `tbl_banner` VALUES (2, 0, 'Banner 2', NULL, NULL, 'uploads/image/banner/banner-1673277717-banner-1666693431-VNPay-Dien-tu-dien-lanh--2--380x200.png', 1, '2023-01-09 00:00:00', '2023-02-15 00:00:00', '2023-01-09 22:21:57', '2023-01-09 22:21:57');
+INSERT INTO `tbl_banner` VALUES (3, 0, 'Banner 3', NULL, NULL, 'uploads/image/banner/banner-1673277738-banner-1666693450-VNPay-iPhone-iPad-380x200.png', 1, '2023-01-09 00:00:00', '2023-02-11 00:00:00', '2023-01-09 22:22:18', '2023-01-09 22:22:18');
+INSERT INTO `tbl_banner` VALUES (4, 0, 'Banner 4', NULL, NULL, 'uploads/image/banner/banner-1673277756-banner-1666693480-VNPay-Toan-bo-san-pham-380x200.png', 1, '2023-01-09 00:00:00', '2023-02-11 00:00:00', '2023-01-09 22:22:36', '2023-01-09 22:22:36');
+INSERT INTO `tbl_banner` VALUES (5, 0, 'Banner 5', NULL, NULL, 'uploads/image/banner/banner-1673277785-banner-1666693521-Desk--1--380x200.jpg', 1, '2023-01-09 00:00:00', '2023-02-24 00:00:00', '2023-01-09 22:23:05', '2023-01-09 22:23:05');
+INSERT INTO `tbl_banner` VALUES (6, 1, 'Slide 1', NULL, NULL, 'uploads/image/banner/banner-1673277803-banner-1666693591-720-220-720x220-105.png', 1, '2023-01-09 00:00:00', '2023-02-10 00:00:00', '2023-01-09 22:23:23', '2023-01-09 22:23:23');
+INSERT INTO `tbl_banner` VALUES (7, 1, 'Slide 2', NULL, NULL, 'uploads/image/banner/banner-1673277820-banner-1666693609-720-220-720x220-172.png', 1, '2023-01-09 00:00:00', '2023-02-10 00:00:00', '2023-01-09 22:23:40', '2023-01-09 22:23:40');
+INSERT INTO `tbl_banner` VALUES (8, 1, 'Slide 3', NULL, NULL, 'uploads/image/banner/banner-1673277843-banner-1666693644-720-220-720x220-183.png', 1, '2023-01-09 00:00:00', '2023-02-11 00:00:00', '2023-01-09 22:24:03', '2023-01-09 22:24:03');
+INSERT INTO `tbl_banner` VALUES (9, 1, 'Slide 4', NULL, NULL, 'uploads/image/banner/banner-1673277864-banner-1666693673-aseri-720-220-720x220-6.png', 1, '2023-01-11 00:00:00', '2023-02-11 00:00:00', '2023-01-09 22:24:24', '2023-01-09 22:24:24');
 
 -- ----------------------------
 -- Table structure for tbl_discount
@@ -274,18 +302,17 @@ CREATE TABLE `tbl_member`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0->default, 1->social',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role_id` int(10) UNSIGNED NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `birth` timestamp NOT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `city_id` int(10) UNSIGNED NOT NULL,
-  `district_id` int(10) UNSIGNED NOT NULL,
-  `ward_id` int(10) UNSIGNED NOT NULL,
-  `activated` tinyint(1) NOT NULL,
-  `activation_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `birth` timestamp NULL DEFAULT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `city_id` int(10) UNSIGNED NULL DEFAULT NULL,
+  `district_id` int(10) UNSIGNED NULL DEFAULT NULL,
+  `ward_id` int(10) UNSIGNED NULL DEFAULT NULL,
+  `activated` tinyint(1) DEFAULT 0 NOT NULL,
+  `activation_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -313,11 +340,13 @@ CREATE TABLE `tbl_order`  (
   `city_id` int(10) UNSIGNED NOT NULL,
   `district_id` int(10) UNSIGNED NOT NULL,
   `ward_id` int(10) UNSIGNED NOT NULL,
-  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `note` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
-  `admin_id` int(10) UNSIGNED NOT NULL,
+  `payment_type` tinyint(1) NOT NULL DEFAULT 0,
+  `payment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `admin_id` int(10) UNSIGNED NULL,
   `total_price` int(10) UNSIGNED NOT NULL,
-  `coupon_id` int(10) UNSIGNED NOT NULL,
+  `coupon_id` int(10) UNSIGNED NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,

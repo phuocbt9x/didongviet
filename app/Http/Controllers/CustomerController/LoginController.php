@@ -26,14 +26,15 @@ class LoginController extends Controller
     public function callback($provider)
     {
         $memberSocialite = Socialite::driver($provider)->stateless()->user();
-        $member = MemberModel::where('email', $memberSocialite->email)->first();
+        $member = MemberModel::where('email', $memberSocialite->email)->orWhere('phone', $memberSocialite->phone)->first();
         if (!empty($member)) {
             Auth::loginUsingId($member->id);
         } else {
             $dataMember = [
-                'type' => $provider,
+                'type' => 1,
                 'name' => $memberSocialite->name,
-                'email' => $memberSocialite->email,
+                'email' => $memberSocialite->email ?? '',
+                'phone' => $memberSocialite->phone ?? '',
                 'avatar' => $memberSocialite->avatar,
                 'activated' => 1
             ];
